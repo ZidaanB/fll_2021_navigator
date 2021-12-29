@@ -1,82 +1,71 @@
-import math
-import itertools
+#note to self: MAKE SURE TO FIX THE COORDINATE ISSUE
+import turtle
 import string
-def getCustList():
-    n_of_items_to_ship = int(input("Enter the items in the list"))
-    list_items_to_shop = []
-    for i in range(0, n_of_items_to_ship):
-        item_to_shop = input("Enter the item:").lower().strip()
-        list_items_to_shop.append(item_to_shop)
-    return (list_items_to_shop)
+screen = turtle.getscreen()
+t = turtle.Turtle()
+# Draw out the grid
+t.color("red")
+StoreWidth = 300
+StoreHeight = 300
+Offset_Value = StoreHeight/6
+GridlinePos = StoreWidth/3
+t.goto(0, 0)
+t.goto(StoreWidth, 0)
+t.goto(StoreWidth, StoreHeight)
+t.goto(0, StoreHeight)
+t.goto(0, 0)
+t.penup()
+t.setpos(StoreWidth / 3, StoreHeight / 3)
+t.pendown()
+t.goto(StoreWidth / 3, 0)
+t.showturtle()
+t.goto(StoreWidth / 3, StoreHeight)
+t.goto(StoreWidth / 1.5, StoreHeight)
+t.goto(StoreWidth / 1.5, 0)
+t.penup()
+t.goto(0, StoreHeight / 3)
+t.pendown()
+t.goto(StoreWidth, StoreHeight / 3)
+t.goto(StoreWidth, StoreHeight / 1.5)
+t.goto(0, StoreHeight / 1.5)
+t.penup()
 
 
-def getItemsAvailable(list1, list2):
-    list1_set = set(list1)
-    differ = list(list1_set.intersection(list2))
-    #print("The list available", differ)
-    return differ
-
-def getItemsInAisleMapping():
-    keymap_aisles = {
-        "A1": "yogurt",
-        "A2": "milk",
-        "A3": "cheese",
-        "B1": "carrots",
-        "B2": "tomatoes",
-        "B3": "artichokes",
-        "C1": "bananas",
-        "C2": "apples",
-        "C3": "mango"
-    }
-    return keymap_aisles
-
-def getAisleList(dictOfElements, listOfValues):
-    listOfKeys = list()
-    listOfItems = dictOfElements.items()
-    for item  in listOfItems:
-        if item[1] in listOfValues:
-            listOfKeys.append(item[0])
-    return  listOfKeys
+# Draw the text separating the aisles
+def writeText(xp, yp, row, column):
+    t.color('black')
+    t.goto(xp, yp)
+    t.write(f"{row}{column}", move=False, font=('Arial', 16, 'normal'))
 
 
-def aisle(X,Y):
-    print(X,Y)
-    #if (A[x] == B[x]):
-    #    print("Same aisle")
+writeText(StoreWidth/6, StoreHeight - ((StoreHeight / 3) / 2), "A", "1")
+writeText(StoreWidth/6,StoreHeight/2 ,"A","2")
+writeText(StoreWidth/6,StoreHeight/6, "A","3")
 
-def aisle_mapp(aisle_cordinates):
-    A1 = [0,0]
-    A2 = [0,1]
-    A3 = [0,2]
-    B1 = [1,0]
-    B2 = [1,1]
-    B3 = [1,2]
-    C1 = [2,0]
-    C2 = [2,1]
-    C3 = [2,2]
-    A0 = [0,0]
+writeText(StoreWidth/2, StoreHeight - ((StoreHeight / 3) / 2),"B", "1")
+writeText(StoreWidth/2,StoreHeight/2,"B","2")
+writeText(StoreWidth/2, StoreWidth/6,"B","3")
 
-    if aisle_cordinates == "A1":
-        return A1
-    elif aisle_cordinates =="A2":
-        return A2
-    elif aisle_cordinates =="A3":
-        return A3
-    elif aisle_cordinates =="B1":
-        return B1
-    elif aisle_cordinates =="B2":
-        return B2
-    elif aisle_cordinates =="B3":
-        return B3
-    elif aisle_cordinates =="C1":
-        return C1
-    elif aisle_cordinates =="C2":
-        return C2
-    elif aisle_cordinates =="C3":
-        return C3
-    else:
-        return A0
-def return_aisle_cord(aisle):
+writeText(StoreWidth-(StoreWidth/6), StoreHeight - ((StoreHeight / 3) / 2),"C", "1")
+writeText(StoreWidth-(StoreWidth/6),StoreHeight/2,"C","2")
+writeText(StoreWidth-(StoreWidth/6), StoreWidth/6,"C","3")
+# Fill each individual aisle
+t.penup()
+t.goto(StoreWidth/3,StoreHeight)
+t.color('blue')
+t.pendown()
+t.goto(StoreWidth/3,0)
+
+t.penup()
+t.goto(StoreWidth - (StoreWidth/3),StoreHeight)
+t.color('yellow')
+t.pendown()
+t.goto(StoreWidth - (StoreWidth/3),0)
+
+# Make the turtle move along the optimal path
+optimal_route = ["A1","A2","B2","C1"]
+aisle_point_screen = []
+def find_point_on_screen(aisle):
     aisle = str(aisle)
     first_val = aisle[0]
     second_val = int(aisle[1])
@@ -84,71 +73,24 @@ def return_aisle_cord(aisle):
     cord_list = []
     cord_list.append(alphabet.index(first_val))
     cord_list.append(second_val - 1)
-    print(cord_list)
-
-def dist_between_aisle(current_aisle,next_aisle):
-    dis_bw_two_aisle=0
-    if current_aisle[0]== next_aisle[0]:
-        dis_bw_two_aisle=abs(current_aisle[1]-next_aisle[1])
-        return dis_bw_two_aisle
+    # Operate on column value (sW/3, sH/6 for centering)
+    if cord_list[0] == 0:
+        aisle_point_screen.append((GridlinePos)-Offset_Value)
     else:
-        dis_bw_two_aisle= (abs(current_aisle[0]-next_aisle[0]))+(abs(current_aisle[1]-next_aisle[1]))
-        return dis_bw_two_aisle
+        aisle_point_screen.append((cord_list[0]*GridlinePos)+Offset_Value)
 
-def get_distance_current_loop(usrlist):
-    distance = 0
-    for aisles in range(0, len(usrlist) - 1):
-        current_aisle_cord = aisle_mapp(usrlist[aisles])
-        next_aisle_cord = aisle_mapp(usrlist[aisles + 1])
-        distance = distance + dist_between_aisle(current_aisle_cord, next_aisle_cord)
-    return distance
-def main():
-    print("Welcome to Navigator")
-    list_items_in_shop = []
-    list_aisle_in_shop = []
-    keymap_aisles = getItemsInAisleMapping()
-    for items in keymap_aisles:
-        list_items_in_shop.append(keymap_aisles[items])
-        list_aisle_in_shop.append(items)
-
-    list_items_to_shop = getCustList()
-    print("The list Customer Wants to shop: ", list_items_to_shop)
-
-    list_available = getItemsAvailable(list_items_to_shop, list_items_in_shop)
-    print("The items in list available to shop: ", (list_available))
-    isle_list = []
-    isle_list.append(getAisleList(keymap_aisles, list_available))
-    isle_list = isle_list[0]
-    print("The aisle list to go around:", isle_list)
-    distance = 0
-
-    for items in range(0, len(isle_list)):
-        isle_list_new = isle_list.copy()
-        distance_current = get_distance_current_loop(isle_list_new)
-
-    print("Total Aisle to cover: ", len(isle_list))
-
-    distance = get_distance_current_loop(isle_list)
-    print("Distance to cover", len(isle_list), " aisles :", distance)
-
-    possible_perm = list(itertools.permutations(isle_list))
-    #print(type(possible_perm))
-    #print(len(possible_perm))
-    #print(possible_perm)
-    distance_current=0
-    distance_minimum=distance
-    list_optimum=[]
-    for permutation in range(0, len(possible_perm)):
-        distance_current = get_distance_current_loop(list(possible_perm[permutation]))
-        if distance_current < distance_minimum:
-            distance_minimum=distance_current
-            list_optimum=list(possible_perm[permutation]).copy()
-            print("List optimum",list_optimum)
-    print("Distance",distance_minimum,"for Loop:",list_optimum)
-
-
-if __name__=="__main__":
-    main()
-
-
-
+    # Operate on row value (sW/6 sH/3 for centering)
+    if cord_list[1] == 0:
+        aisle_point_screen.append((GridlinePos)-Offset_Value)
+    else:
+        aisle_point_screen.append((cord_list[1]*GridlinePos)+Offset_Value)
+    return aisle_point_screen
+numAisles_in_route = len(optimal_route)
+t.penup()
+t.color('black')
+print(type(optimal_route[0]))
+print(optimal_route[0])
+print(find_point_on_screen('A3'))
+t.goto(find_point_on_screen("A3")[0], find_point_on_screen("A3")[1])
+#t.goto(find_point_on_screen(int(optimal_route[0][0]),)
+turtle.Screen().exitonclick()
