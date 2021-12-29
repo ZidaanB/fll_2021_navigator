@@ -80,16 +80,37 @@ def find_point_on_screen(aisle):
 
     # Operate on row value (sW/6 sH/3 for centering)
     if cord_list[1] == 0:
-        aisle_point_screen.append((GridlinePos)-Offset_Value)
+        aisle_point_screen.append(StoreHeight-Offset_Value)
     else:
-        aisle_point_screen.append((cord_list[1]*GridlinePos)+Offset_Value)
+        #aisle_point_screen.append((cord_list[1]*GridlinePos)+Offset_Value)
+        i = 100
+        j=StoreWidth//i
+        for j1 in range(0,j):
+            if j1 == 0:
+                top=StoreWidth-Offset_Value
+            else:
+                top=top-i
+
+
+
     return aisle_point_screen
 numAisles_in_route = len(optimal_route)
+aisle_cords = {
+    "A1": (50,250),
+    "A2": (50,150),
+    "A3": (50,50),
+    "B1": (150,250),
+    "B2": (150,150),
+    "B3": (150,50),
+    "C1": (250,250),
+    "C2": (250,150),
+    "C3": (250,50)
+}
+
 t.penup()
 t.color('black')
-print(type(optimal_route[0]))
-print(optimal_route[0])
-print(find_point_on_screen('A3'))
-t.goto(find_point_on_screen("A3")[0], find_point_on_screen("A3")[1])
-#t.goto(find_point_on_screen(int(optimal_route[0][0]),)
+t.goto(optimal_route[0])
+#for i in range(1,len(optimal_route)):
+
+t.goto()
 turtle.Screen().exitonclick()
