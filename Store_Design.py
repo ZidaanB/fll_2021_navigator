@@ -57,12 +57,12 @@ t.goto(StoreWidth/3,0)
 
 t.penup()
 t.goto(StoreWidth - (StoreWidth/3),StoreHeight)
-t.color('yellow')
+t.color('green')
 t.pendown()
 t.goto(StoreWidth - (StoreWidth/3),0)
 
 # Make the turtle move along the optimal path
-optimal_route = ["A1","A2","B2","C1"]
+optimal_route = ["A1","A2","B1","C1","C2"]
 aisle_point_screen = []
 def find_point_on_screen(aisle):
     aisle = str(aisle)
@@ -109,8 +109,9 @@ aisle_cords = {
 
 t.penup()
 t.color('black')
-t.goto(optimal_route[0])
-#for i in range(1,len(optimal_route)):
-
-t.goto()
+t.goto(aisle_cords[optimal_route[0]][0], aisle_cords[optimal_route[0]][1])
+t.pendown()
+for i in range(1,len(optimal_route)):
+    t.goto(aisle_cords[optimal_route[i]][0], aisle_cords[optimal_route[i]][1])
+t.penup()
 turtle.Screen().exitonclick()
